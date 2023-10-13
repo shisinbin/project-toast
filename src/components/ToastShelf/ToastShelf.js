@@ -6,7 +6,27 @@ import { ToastContext } from '../ToastProvider/ToastProvider';
 import styles from './ToastShelf.module.css';
 
 function ToastShelf() {
-  const { toastMessages } = React.useContext(ToastContext);
+  const { toastMessages, dismissAllToasts } =
+    React.useContext(ToastContext);
+
+  React.useEffect(() => {
+    console.log('useEffect in ToastShelf fired!');
+
+    function handleKeyDown(event) {
+      if (event.code === 'Escape') {
+        dismissAllToasts();
+      }
+    }
+
+    // Set up a subscription
+    window.addEventListener('keydown', handleKeyDown);
+
+    // On exit of modal, remove subscription
+    return () => {
+      console.log('ToastShelf out, folks!');
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [dismissAllToasts]);
 
   if (toastMessages.length === 0) {
     return null;

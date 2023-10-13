@@ -12,7 +12,8 @@ function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
 
-  const { createToastMessage } = React.useContext(ToastContext);
+  const { createToastMessage, toastMessages } =
+    React.useContext(ToastContext);
   const messageRef = React.useRef();
 
   const handleSubmit = (event) => {
@@ -38,7 +39,7 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      <ToastShelf />
+      {toastMessages.length > 0 && <ToastShelf />}
 
       <form
         className={styles.controlsWrapper}

@@ -33,6 +33,15 @@ function ToastProvider({ children }) {
     });
   };
 
+  // Dismiss all toast messages
+  // const dismissAllToasts = () => {
+  //   setToastMessages([]);
+  // };
+
+  const dismissAllToasts = React.useCallback(() => {
+    setToastMessages([]);
+  }, []);
+
   return (
     // Provide the toast context and its functions to child components
     <ToastContext.Provider
@@ -40,6 +49,7 @@ function ToastProvider({ children }) {
         toastMessages,
         createToastMessage,
         dismissToastMessage,
+        dismissAllToasts,
       }}
     >
       {children}
