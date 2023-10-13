@@ -34,29 +34,12 @@ function ToastProvider({ children }) {
   };
 
   // Dismiss all toast messages. Uses useCallback to help
-  // preserve reference to this function between renders
+  // preserve reference to this function between renders,
+  // preventing any 'pure' component that uses this function
+  // to unnecessarily re-render
   const dismissAllToasts = React.useCallback(() => {
     setToastMessages([]);
   }, []);
-
-  // Solution approach to exercise 5.1
-  // React.useEffect(() => {
-  //   console.log('useEffect in ToastProvider fired!');
-
-  //   function handleKeyDown(event) {
-  //     if (event.code === 'Escape') {
-  //       console.log('setting toastMessages to an empty array!');
-  //       setToastMessages([]);
-  //     }
-  //   }
-
-  //   window.addEventListener('keydown', handleKeyDown);
-
-  //   return () => {
-  //     console.log('ToastProvider out, folks!');
-  //     window.removeEventListener('keydown', handleKeyDown);
-  //   };
-  // }, []);
 
   return (
     // Provide the toast context and its functions to child components

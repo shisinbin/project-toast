@@ -2,6 +2,7 @@ import React from 'react';
 
 import Toast from '../Toast';
 import { ToastContext } from '../ToastProvider/ToastProvider';
+import useKeydown from '../../hooks/useKeydown';
 
 import styles from './ToastShelf.module.css';
 
@@ -9,24 +10,7 @@ function ToastShelf() {
   const { toastMessages, dismissAllToasts } =
     React.useContext(ToastContext);
 
-  React.useEffect(() => {
-    // console.log('useEffect in ToastShelf fired!');
-
-    function handleKeyDown(event) {
-      if (event.code === 'Escape') {
-        dismissAllToasts();
-      }
-    }
-
-    // Set up a subscription
-    window.addEventListener('keydown', handleKeyDown);
-
-    // On exit of shelf, remove subscription
-    return () => {
-      // console.log('ToastShelf out, folks!');
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [dismissAllToasts]);
+  useKeydown('Escape', dismissAllToasts);
 
   if (toastMessages.length === 0) {
     return null;
