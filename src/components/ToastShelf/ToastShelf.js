@@ -10,7 +10,7 @@ function ToastShelf() {
     React.useContext(ToastContext);
 
   React.useEffect(() => {
-    console.log('useEffect in ToastShelf fired!');
+    // console.log('useEffect in ToastShelf fired!');
 
     function handleKeyDown(event) {
       if (event.code === 'Escape') {
@@ -21,9 +21,9 @@ function ToastShelf() {
     // Set up a subscription
     window.addEventListener('keydown', handleKeyDown);
 
-    // On exit of modal, remove subscription
+    // On exit of shelf, remove subscription
     return () => {
-      console.log('ToastShelf out, folks!');
+      // console.log('ToastShelf out, folks!');
       window.removeEventListener('keydown', handleKeyDown);
     };
   }, [dismissAllToasts]);
@@ -33,7 +33,12 @@ function ToastShelf() {
   }
 
   return (
-    <ol className={styles.wrapper}>
+    <ol
+      className={styles.wrapper}
+      role='region'
+      aria-live='polite'
+      aria-label='Notification'
+    >
       {toastMessages.map(({ message, variant, id }) => (
         <li className={styles.toastWrapper} key={id}>
           <Toast id={id} variant={variant}>
