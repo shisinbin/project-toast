@@ -4,15 +4,36 @@ import Button from '../Button';
 
 import styles from './ToastPlayground.module.css';
 import Toast from '../Toast/Toast';
+import ToastShelf from '../ToastShelf/ToastShelf';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState('notice');
-  const [showToast, setShowToast] = React.useState(false);
 
-  const dismissToast = () => setShowToast(false);
+  const [toastMessages, setToastMessages] = React.useState([]);
+
+  const handleAddToastMessage = () => {
+    const newToastMessage = {
+      message: message,
+      variant: variant,
+      id: crypto.randomUUID(),
+    };
+
+    setToastMessages((prevToastMessages) => {
+      return [...prevToastMessages, newToastMessage];
+    });
+  };
+
+  const handleDeleteToastMessage = (id) => {
+    setToastMessages((prevToastMessages) => {
+      const filteredToastMessages = prevToastMessages.filter(
+        (toastMessage) => toastMessage.id !== id
+      );
+      return filteredToastMessages;
+    });
+  };
 
   return (
     <div className={styles.wrapper}>
@@ -20,10 +41,17 @@ function ToastPlayground() {
         <img alt='Cute toast mascot' src='/toast.png' />
         <h1>Toast Playground</h1>
       </header>
-      {showToast && (
+      {/* {showToast && (
         <Toast variant={variant} dismissToast={dismissToast}>
           {message}
         </Toast>
+      )} */}
+
+      {toastMessages.length > 0 && (
+        <ToastShelf
+          toastMessages={toastMessages}
+          handleDeleteToastMessage={handleDeleteToastMessage}
+        />
       )}
 
       <div className={styles.controlsWrapper}>
@@ -79,7 +107,7 @@ function ToastPlayground() {
           <div
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
-            <Button onClick={() => setShowToast(true)}>
+            <Button onClick={handleAddToastMessage}>
               Pop Toast!
             </Button>
           </div>
