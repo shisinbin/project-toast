@@ -1,10 +1,10 @@
 import React from 'react';
 
 import Button from '../Button';
+import ToastShelf from '../ToastShelf/ToastShelf';
+import { ToastContext } from '../ToastProvider/ToastProvider';
 
 import styles from './ToastPlayground.module.css';
-import Toast from '../Toast/Toast';
-import ToastShelf from '../ToastShelf/ToastShelf';
 
 const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
@@ -12,11 +12,10 @@ function ToastPlayground() {
   const [message, setMessage] = React.useState('');
   const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
 
-  const [toastMessages, setToastMessages] = React.useState([]);
-
+  const { createToastMessage } = React.useContext(ToastContext);
   const messageRef = React.useRef();
 
-  const handleAddToastMessage = (event) => {
+  const handleSubmit = (event) => {
     event.preventDefault();
 
     if (message === '') {
@@ -25,28 +24,11 @@ function ToastPlayground() {
       return;
     }
 
-    const newToastMessage = {
-      message: message,
-      variant: variant,
-      id: crypto.randomUUID(),
-    };
-
-    setToastMessages((prevToastMessages) => {
-      return [...prevToastMessages, newToastMessage];
-    });
+    createToastMessage(message, variant);
 
     setMessage('');
     setVariant(VARIANT_OPTIONS[0]);
     messageRef.current.focus();
-  };
-
-  const handleDeleteToastMessage = (id) => {
-    setToastMessages((prevToastMessages) => {
-      const filteredToastMessages = prevToastMessages.filter(
-        (toastMessage) => toastMessage.id !== id
-      );
-      return filteredToastMessages;
-    });
   };
 
   return (
@@ -56,16 +38,11 @@ function ToastPlayground() {
         <h1>Toast Playground</h1>
       </header>
 
-      {toastMessages.length > 0 && (
-        <ToastShelf
-          toastMessages={toastMessages}
-          handleDeleteToastMessage={handleDeleteToastMessage}
-        />
-      )}
+      <ToastShelf />
 
       <form
         className={styles.controlsWrapper}
-        onSubmit={handleAddToastMessage}
+        onSubmit={handleSubmit}
       >
         <div className={styles.row}>
           <label
