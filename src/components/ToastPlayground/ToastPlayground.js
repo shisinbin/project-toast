@@ -10,11 +10,21 @@ const VARIANT_OPTIONS = ['notice', 'warning', 'success', 'error'];
 
 function ToastPlayground() {
   const [message, setMessage] = React.useState('');
-  const [variant, setVariant] = React.useState('notice');
+  const [variant, setVariant] = React.useState(VARIANT_OPTIONS[0]);
 
   const [toastMessages, setToastMessages] = React.useState([]);
 
-  const handleAddToastMessage = () => {
+  const messageRef = React.useRef();
+
+  const handleAddToastMessage = (event) => {
+    event.preventDefault();
+
+    if (message === '') {
+      window.alert('No message to add');
+      messageRef.current.focus();
+      return;
+    }
+
     const newToastMessage = {
       message: message,
       variant: variant,
@@ -24,6 +34,10 @@ function ToastPlayground() {
     setToastMessages((prevToastMessages) => {
       return [...prevToastMessages, newToastMessage];
     });
+
+    setMessage('');
+    setVariant(VARIANT_OPTIONS[0]);
+    messageRef.current.focus();
   };
 
   const handleDeleteToastMessage = (id) => {
@@ -41,11 +55,6 @@ function ToastPlayground() {
         <img alt='Cute toast mascot' src='/toast.png' />
         <h1>Toast Playground</h1>
       </header>
-      {/* {showToast && (
-        <Toast variant={variant} dismissToast={dismissToast}>
-          {message}
-        </Toast>
-      )} */}
 
       {toastMessages.length > 0 && (
         <ToastShelf
@@ -54,7 +63,10 @@ function ToastPlayground() {
         />
       )}
 
-      <div className={styles.controlsWrapper}>
+      <form
+        className={styles.controlsWrapper}
+        onSubmit={handleAddToastMessage}
+      >
         <div className={styles.row}>
           <label
             htmlFor='message'
@@ -65,6 +77,7 @@ function ToastPlayground() {
           </label>
           <div className={styles.inputWrapper}>
             <textarea
+              ref={messageRef}
               id='message'
               className={styles.messageInput}
               value={message}
@@ -107,12 +120,10 @@ function ToastPlayground() {
           <div
             className={`${styles.inputWrapper} ${styles.radioWrapper}`}
           >
-            <Button onClick={handleAddToastMessage}>
-              Pop Toast!
-            </Button>
+            <Button>Pop Toast!</Button>
           </div>
         </div>
-      </div>
+      </form>
     </div>
   );
 }
